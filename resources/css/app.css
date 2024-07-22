@@ -1,0 +1,42 @@
+/* <!--Navbar  --> */
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+}
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: blue;
+    transition: width 0.3s ease;
+}
+.nav-link:hover {
+    color: blue;
+}
+.nav-link:hover::before {
+    width: calc(100% - 20px); /* Adjust width as per your design */
+}
+
+/* Banner flashing  */
+#banner {
+    padding: 20px;
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    text-align: center; /* Center text */
+    font-size: 1.5em; /* Increase font size */
+    animation: flash 1s infinite; /* Flashing animation */
+  }
+  
+  @keyframes flash {
+    0%, 100% {
+      opacity: 1; /* Fully visible */
+    }
+    50% {
+      opacity: 0; /* Fully invisible */
+    }
+  }
+  
