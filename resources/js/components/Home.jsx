@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
-
+import { Link } from 'react-router-dom';
 
 const Home = () => {
 
@@ -25,6 +25,7 @@ const Home = () => {
             <div className="row">
                 {products.map(product => (
                     <div className="col-md-4 mb-4" key={product.id}>
+                     <Link to={`/product/${product.id}`}>
                         <div className="card">
                         <img
                             src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
@@ -38,6 +39,7 @@ const Home = () => {
                                 <a href="#" className="btn btn-primary">Add to Cart</a>
                             </div>
                         </div>
+                        </Link>
                     </div>
                 ))}
             </div>
