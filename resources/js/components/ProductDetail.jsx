@@ -1,7 +1,7 @@
-// ProductDetail.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
 
 const ProductDetail = () => {
     const { id } = useParams(); // Retrieve the product ID from the URL
@@ -13,13 +13,16 @@ const ProductDetail = () => {
         // Fetch product details based on the ID
         axios.get(`/api/product/${id}`)
             .then(response => {
-               // console.log(response.data.product)
                 setProduct(response.data.product);
                 setLoading(false);
+                // Set document title based on product title
+                document.title = response.data.product.title;
             })
             .catch(err => {
                 setError('Error fetching product details');
                 setLoading(false);
+                // Set a generic title in case of an error
+                document.title = 'Product Details';
             });
     }, [id]); // Re-run the effect if the ID changes
 
@@ -27,9 +30,16 @@ const ProductDetail = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="container">
+        <div className="container mt-5">
+            <div className="mb-4">
+                <Link to="/">
+                    <Button variant="danger">
+                        Go Back
+                    </Button>
+                </Link>
+            </div>
             {product ? (
-                <div className="card col-md-6 mb-6" >
+                <div className="card mx-auto" style={{ maxWidth: '600px' }}>
                     <img
                         src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
                         className="card-img-top"
@@ -39,7 +49,7 @@ const ProductDetail = () => {
                         <h5 className="card-title">{product.title}</h5>
                         <p className="card-text">{product.description}</p>
                         <p className="card-text"><strong>Price: ${product.price}</strong></p>
-                        <a href="#" className="btn btn-primary">Add to Cart</a>
+                        <Button variant="primary">Add to Cart</Button>
                     </div>
                 </div>
             ) : (
