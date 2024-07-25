@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+import Loader from './Loader';
 
 const ProductDetail = () => {
     const { id } = useParams(); // Retrieve the product ID from the URL
@@ -14,7 +15,7 @@ const ProductDetail = () => {
         axios.get(`/api/product/${id}`)
             .then(response => {
                 setProduct(response.data.product);
-                setLoading(false);
+                setLoading(false); // Set loading to false after data is fetched
                 // Set document title based on product title
                 document.title = response.data.product.title;
             })
@@ -26,7 +27,7 @@ const ProductDetail = () => {
             });
     }, [id]); // Re-run the effect if the ID changes
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loader />;
     if (error) return <div>{error}</div>;
 
     return (

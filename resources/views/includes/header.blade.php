@@ -6,8 +6,9 @@
     <title>{{env('APP_NAME')}}</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-   
-   
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/mirage.js"></script>
+
+     
     @viteReactRefresh 
     @vite([
             'resources/css/app.css', 
