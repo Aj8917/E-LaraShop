@@ -23,12 +23,14 @@
 
 /* Banner flashing  */
 #banner {
+  position: relative;
     padding: 20px;
     background-color: #007bff; /* Blue background color */
     color: white; /* White text color */
     text-align: center; /* Center text */
     font-size: 1.5em; /* Increase font size */
     animation: flash 1s infinite; /* Flashing animation */
+    margin: 1% 5% 0 5%;
   }
   
   @keyframes flash {
@@ -50,3 +52,16 @@
     align-items: center;
     height: 100vh; /* Full viewport height */
 }
+
+body, nav,footer{
+           
+  background-color: #FAACA8;
+background-image: linear-gradient(19deg, #491714 0%, #271859 100%);
+
+  
+}
+/* nav,footer{
+  background-color: #8EC5FC;
+  background-image: linear-gradient(62deg, #c6437e 0%, #5f33c7 100%);
+  
+} */

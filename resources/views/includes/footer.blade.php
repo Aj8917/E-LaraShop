@@ -1,6 +1,6 @@
-
-<footer class="py-16 text-center text-sm text-black dark:text-white/70">
-    Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+<hr>
+<footer class="py-16 text-center m-2 text-sm text-black dark:text-white/70">
+    <h1> <i class="bi bi-book-half"></i> E-LaraShop<i class="bi bi-at"></i>copyrights all rights reserved 2024 </h1>
 </footer>
 
 <!-- jQuery and Bootstrap JS for navbar effect-->
