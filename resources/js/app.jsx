@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route,useLocation} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 import Home from './components/Home';
-import Navbar from './components/Navbar';
 import ProductDetail from './components/ProductDetail';
+import Navbar from './components/Navbar';
+import { store } from './store';
+import { Provider } from 'react-redux'
 const App = () => {
     // return <h1>Welcome!</h1>;
-    
-
 };
 
 const Flash = () => {
@@ -25,14 +25,16 @@ const ConditionalFlash = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(
-    <Router>
-        <App />
-        <Navbar  />
-        <ConditionalFlash />
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            
-        </Routes>
-    </Router>
+    <Provider store={store}>
+        <Router>
+    <Navbar />
+    <App /> 
+            <ConditionalFlash />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+
+            </Routes>
+        </Router>
+    </Provider>
 );

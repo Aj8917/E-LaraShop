@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const Navbar = ({ cart }) => {
+
+
+const Navbar = () => {
+    // Access cart state from Redux store
+    const cartItems = useSelector((state) => state.cart.cartItems);
+    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <Link className="navbar-brand" to="/">Navbar</Link>
@@ -27,7 +34,7 @@ const Navbar = ({ cart }) => {
                     </li>
                 </ul>
                 <Link className="nav-link" to="/cart">
-                    <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{cart ? cart.length : '0' }</span>
+                <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{totalQuantity}</span>
                 </Link>
             </div>
         </nav>
