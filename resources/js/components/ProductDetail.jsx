@@ -9,6 +9,8 @@ const ProductDetail = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+        
 
     useEffect(() => {
         // Fetch product details based on the ID
@@ -26,6 +28,17 @@ const ProductDetail = () => {
                 document.title = 'Product Details';
             });
     }, [id]); // Re-run the effect if the ID changes
+
+    const addToCart = () => {
+        const cart = { ...product, quantity: Number(quantity) };
+        setCart(prevCart => [...prevCart, cart]);
+        alert(`${product.title} has been added to the cart with quantity ${quantity}`);
+    };
+
+    const handleQuantityChange = (event) => {
+        setQuantity(event.target.value);
+    };
+    
 
     if (loading) return <Loader />;
     if (error) return <div>{error}</div>;
@@ -50,7 +63,15 @@ const ProductDetail = () => {
                         <h5 className="card-title">{product.title}</h5>
                         <p className="card-text">{product.description}</p>
                         <p className="card-text"><strong>Price: ${product.price}</strong></p>
-                        <Button variant="primary">Add to Cart</Button>
+                        <p className="card-text"><strong>Qantity: </strong>
+                            <select className="form-select" aria-label="Default select example" value={quantity} onChange={handleQuantityChange}>
+                            <option selected>Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                        </p>
+                        <Button variant="primary" onClick={addToCart}>Add to Cart</Button>
                     </div>
                 </div>
             ) : (

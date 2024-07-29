@@ -35,8 +35,8 @@ const Home = () => {
                             <div className="card-body">
                                 <h5 className="card-title">{product.title}</h5>
                                 <p className="card-text">{product.description}</p>
-                                <p className="card-text"><strong>Price: ${product.price}</strong></p>
-                                <a href="#" className="btn btn-primary">Add to Cart</a>
+                                <p className="card-text "><strong>Price: ${product.price}</strong></p>
+                                
                             </div>
                         </div>
                         </Link>
