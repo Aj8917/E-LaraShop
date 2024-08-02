@@ -12,15 +12,14 @@ export const CartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
 
-            const { user_id, productId, amount, quantity } = action.payload;
+            const { data } = action.payload;
 
-            state.cartItems.push({                                      
-                user_id,
-                productId,
-                amount,
-                quantity,
-            });
-            state.value+=quantity;
+            if (data && data.quantity !== undefined) {
+                state.cartItems.push(data);
+                state.value += data.quantity;
+              } else {
+                console.error('Invalid data payload:', data);
+              }
         }
     }
 })

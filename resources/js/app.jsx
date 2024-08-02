@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-
+import 'react-toastify/dist/ReactToastify.css';
 import Home from './components/Home';
 import ProductDetail from './components/ProductDetail';
 import Navbar from './components/Navbar';
+import Cart from './components/Cart';
 import { store } from './store';
 import { Provider } from 'react-redux'
 const App = () => {
@@ -33,7 +34,7 @@ root.render(
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
-
+                <Route path="/cart" element={ <Cart />} />
             </Routes>
         </Router>
     </Provider>

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import Loader from './Loader';
+import { ToastContainer, toast } from 'react-toastify';
+
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../slices/CartSlice.jsx';
+import Loader from './Loader';
 
 const ProductDetail = () => {
     const { id } = useParams(); // Retrieve the product ID from the URL
@@ -23,6 +25,17 @@ const ProductDetail = () => {
             } catch (err) {
                 setError('Error fetching product details');
                 document.title = 'Product Details';
+
+                toast.error(`Error: ${err.message}`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                  });
             } finally {
                 setLoading(false);
             }
@@ -33,9 +46,9 @@ const ProductDetail = () => {
 
     const loadToCart = () => {
         const cartItem = { ...product, quantity: Number(quantity) };
-        //setCart(prevCart => [...prevCart, cart]);
-        dispatch(addToCart(cartItem))
-        alert(`${product.title} has been added to the cart with quantity ${quantity}`);
+        dispatch(addToCart({ data: cartItem }));
+        toast.success(`${product.title} has been added to the cart with quantity ${quantity}`);
+        
     };
 
     const handleQuantityChange = (event) => {
@@ -55,6 +68,7 @@ const ProductDetail = () => {
                     </Button>
                 </Link>
             </div>
+            <ToastContainer />
             {product ? (
                 <div className="card mx-auto" style={{ maxWidth: '600px' }}>
                     <img
