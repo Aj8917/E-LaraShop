@@ -1,23 +1,22 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
-
+import { removeFromCart ,updateCartItem } from '../slices/CartSlice';
+import { Link } from 'react-router-dom';
 const Cart = () => {
     const dispatch = useDispatch();
     const cart = useSelector(state => state.cart.cartItems);
 
     const handleQuantityChange = (item, event) => {
         const newQuantity = parseInt(event.target.value);
-        dispatch({ type: 'UPDATE_CART_ITEM', payload: { ...item, quantity: newQuantity } });
+        dispatch(updateCartItem({id:item.id,quantity:newQuantity}))
     };
 
     const handleRemoveFromCart = (itemId) => {
-        dispatch({ type: 'REMOVE_FROM_CART', payload: itemId });
+        dispatch(removeFromCart({ itemId }));
     };
 
-    const handleAddToCart = (item) => {
-        dispatch({ type: 'ADD_TO_CART', payload: item });
-    };
+    
 
     const calculateTotal = () => {
         let totalQuantity = 0;
@@ -32,61 +31,72 @@ const Cart = () => {
     const { totalQuantity, totalPrice } = calculateTotal();
 
     return (
-        <div className="d-flex">
-            <div className="flex-grow-1">
-                <h1>Cart</h1>
-                
-                    {cart && cart.length > 0 ? cart.map(item => (
-                        
-                           
-                            <div className="card mx-auto mb-3" style={{ maxWidth: '600px' }}>
-                                <img
-                                    src={`${import.meta.env.VITE_STORAGE_PATH}${item.image}`}
-                                    className="card-img-top"
-                                    alt={item.title}
-                                />
-                                <div className="card-body">
-                                    <h5 className="card-title">{item.title}</h5>
-                                    <p className="card-text">{item.description}</p>
-                                    <p className="card-text"><strong>Price: ${item.price}</strong></p>
-                                    <p className="card-text">
-                                        <strong>Quantity: </strong>
-                                        <select
-                                            className="form-select"
-                                            aria-label="Default select example"
-                                            value={item.quantity}
-                                            onChange={(e) => handleQuantityChange(item, e)}
-                                        >
-                                            {[...Array(5).keys()].map(i => (
-                                                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                                            ))}
-                                        </select>
-                                    </p>
-                                    <p className="card-text">
-                                        <Button variant='danger' onClick={() => handleRemoveFromCart(item.id)}>
-                                            <i className="bi bi-trash"></i>
-                                        </Button>
-                                    </p>
-                                </div>
+        <div className="container mt-5">
+        <h1>Cart</h1>
+        <div className="row">
+            <div className={`col-md-8 ${cart && cart.length > 0 ? 'mb-5' : ''}`}>
+                {cart && cart.length > 0 ? (
+                    cart.map(item => (
+                        <div key={item.id} className="card mb-3" style={{ maxWidth: '600px' }}>
+                            <img
+                                src={`${import.meta.env.VITE_STORAGE_PATH}${item.image}`}
+                                className="card-img-top"
+                                alt={item.title}
+                            />
+                            <div className="card-body">
+                                <h5 className="card-title">{item.title}</h5>
+                                <p className="card-text">{item.description}</p>
+                                <p className="card-text"><strong>Price: ${item.price}</strong></p>
+                                <p className="card-text">
+                                    <strong>Quantity: </strong>
+                                    <select
+                                        className="form-select"
+                                        aria-label="Default select example"
+                                        value={item.quantity}
+                                        onChange={(e) => handleQuantityChange(item, e)}
+                                    >
+                                        {[...Array(5).keys()].map(i => (
+                                            <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                        ))}
+                                    </select>
+                                </p>
+                                <p className="card-text">
+                                    <Button variant='danger' onClick={() => handleRemoveFromCart(item.id)}>
+                                        <i className="bi bi-trash"></i>
+                                    </Button>
+                                </p>
                             </div>
-                        
-                    )) : (
-                        <div>No items in the cart</div>
-                    )}
-            </div>
-            <div className="ms-3 m-5">
-                <h2>Summary</h2>
-                <div className="card" style={{ width: '18rem' }}>
-                    <div className="card-body">
-                        <h5 className="card-title">Cart Summary</h5>
-                        <p className="card-text">Total Quantity: {totalQuantity}</p>
-                        <p className="card-text">Total Price: $ <b>{totalPrice.toFixed(2)}</b></p>
+                        </div>
+                    ))
+                ) : (
+                     <div className="d-flex justify-content-center align-items-center flex-column min-vh-100">
+                        <div className="text-center">
+                            <h2 className="mb-3">Your Cart is Empty</h2>
+                            <p className="mb-4">Looks like you haven't added anything to your cart yet.</p>
+                            <Link to="/">
+                                <Button variant="danger">
+                                    Go Back
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
-                <Button >Checkout</Button>
-
-                </div>
+                )}
             </div>
+            {cart && cart.length > 0 && (
+                <div className="col-md-4">
+                    <h2>Summary</h2>
+                    <div className="card" style={{ width: '100%' }}>
+                        <div className="card-body">
+                            <h5 className="card-title">Cart Summary</h5>
+                            <p className="card-text">Total Quantity: {totalQuantity}</p>
+                            <p className="card-text">Total Price: $ <b>{totalPrice.toFixed(2)}</b></p>
+                        </div>
+                        <Button className="w-100">Checkout</Button>
+                    </div>
+                </div>
+            )}
         </div>
+    </div>
     );
 };
 
