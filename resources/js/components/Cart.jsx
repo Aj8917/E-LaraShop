@@ -1,10 +1,11 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import { removeFromCart ,updateCartItem } from '../slices/CartSlice';
-import { Link } from 'react-router-dom';
+import { removeFromCart ,updateCartItem , checkout } from '../slices/CartSlice';
+import { Link, useNavigate } from 'react-router-dom';
 const Cart = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const cart = useSelector(state => state.cart.cartItems);
 
     const handleQuantityChange = (item, event) => {
@@ -17,7 +18,9 @@ const Cart = () => {
     };
 
     
-
+    const handleCheckout=(cart)=>{
+        dispatch(checkout({ data: cart, navigate }))
+    }
     const calculateTotal = () => {
         let totalQuantity = 0;
         let totalPrice = 0;
@@ -91,7 +94,7 @@ const Cart = () => {
                             <p className="card-text">Total Quantity: {totalQuantity}</p>
                             <p className="card-text">Total Price: $ <b>{totalPrice.toFixed(2)}</b></p>
                         </div>
-                        <Button className="w-100">Checkout</Button>
+                        <Button className="w-100" onClick={()=>handleCheckout()}>Checkout</Button>
                     </div>
                 </div>
             )}

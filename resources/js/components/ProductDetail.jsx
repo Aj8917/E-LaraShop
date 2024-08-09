@@ -82,7 +82,7 @@ const ProductDetail = () => {
                         <p className="card-text"><strong>Price: ${product.price}</strong></p>
                         <p className="card-text"><strong>Qantity: </strong>
                             <select className="form-select" aria-label="Default select example" value={quantity} onChange={handleQuantityChange}>
-                                <option selected>Select</option>
+                                <option value="" disabled>Select</option> 
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>

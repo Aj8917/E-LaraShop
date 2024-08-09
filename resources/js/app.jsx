@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Cart from './components/Cart';
 import { store } from './store';
 import { Provider } from 'react-redux'
+import Login from './components/Login';
 const App = () => {
     // return <h1>Welcome!</h1>;
 };
@@ -35,6 +36,7 @@ root.render(
                 <Route path="/" element={<Home />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={ <Cart />} />
+                <Route path="/login" element={<Login />} />
             </Routes>
         </Router>
     </Provider>
