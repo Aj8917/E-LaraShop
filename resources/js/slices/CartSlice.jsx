@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 
 const initialState = {
@@ -62,20 +63,19 @@ export const CartSlice = createSlice({
                 });
 
                 if (response.status === 200) {
-                 //   dispatch(setOrder(response.data)); // Store the order details
-                    console.log('Checkout successful', response.data);
+                
+                    toast.success('Checkout successful!');
                 } else {
-                    console.log('Unexpected status code:', response.status);
+                    toast.error('Unexpected response from server.');
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
                     // Unauthorized, prompt for login
                     navigate('/login')
-                    console.log('Unauthorized: Please log in again');
+                    toast.error('Unauthorized: Please log in again.');
                     
                 } else {
-                    console.log('Checkout error:', error.message);
-                   // dispatch(setError('Checkout failed. Please try again.'));
+                    toast.error(`Checkout error: ${error.message}`);
                 }
             } 
         },

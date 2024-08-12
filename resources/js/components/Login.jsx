@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
+import { login } from '../slices/AuthSlice';
+import {useNavigate } from 'react-router-dom';
 
 
 
@@ -8,8 +10,14 @@ const Login = () => {
 const [email,setEmail]= useState('');
 const [password, setPassword] = useState('');
 
+const dispatch =useDispatch();
+const navigate= useNavigate();
 const handleLogin=()=>{
-    dispatch()
+    
+  
+        // Dispatch the login action with the data
+        dispatch(login({ email, password },{meta:{navigate}}));
+    
 }
  return (
 <div className="d-flex justify-content-center align-items-center min-vh-100">

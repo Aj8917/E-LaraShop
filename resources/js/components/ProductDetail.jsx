@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../slices/CartSlice.jsx';
@@ -68,7 +68,7 @@ const ProductDetail = () => {
                     </Button>
                 </Link>
             </div>
-            <ToastContainer />
+            
             {product ? (
                 <div className="card mx-auto" style={{ maxWidth: '600px' }}>
                     <img

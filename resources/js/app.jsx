@@ -9,6 +9,7 @@ import Cart from './components/Cart';
 import { store } from './store';
 import { Provider } from 'react-redux'
 import Login from './components/Login';
+import { ToastContainer } from 'react-toastify';
 const App = () => {
     // return <h1>Welcome!</h1>;
 };
@@ -31,6 +32,7 @@ root.render(
         <Router>
     <Navbar />
     <App /> 
+    <ToastContainer />
             <ConditionalFlash />
             <Routes>
                 <Route path="/" element={<Home />} />

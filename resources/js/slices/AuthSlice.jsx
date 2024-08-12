@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const AuthSlice = createSlice({
     name: 'auth',
@@ -11,15 +12,20 @@ export const AuthSlice = createSlice({
     },
     reducers:{
         login: async (state , action)=>{
+            const navigate = action.meta?.navigate; 
           try 
           { 
              const response = await axios.post('/api/login',action.payload)
 
              localStorage.setItem('token',response.data.access_token);
-             return response.data;
+             if (navigate) {
+                navigate('/');
+            }
+             toast.success(`Login Successfull`);
           }catch(error)
           {
-                return null;
+          
+            toast.error(`${error.response.data.message}`);
           }
         } ,  
     }
