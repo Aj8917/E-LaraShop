@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
@@ -16,5 +17,10 @@ Route::get('/product/{id}',[ProductController::class,'fetchProduct']);
 
 
 Route::post('/login',[AuthController::class,'login']);
-Route::middleware('auth:sanctum')->post('/checkout',[AuthController::class,'process']);
 
+
+Route::middleware('auth:sanctum')->group(function(){
+
+    Route::post('/checkout',[OrderController::class,'store']);
+    Route::apiResource('orders',OrderController::class);
+});

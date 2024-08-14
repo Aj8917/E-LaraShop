@@ -16,7 +16,8 @@ const handleLogin=()=>{
     
   
         // Dispatch the login action with the data
-        dispatch(login({ email, password },{meta:{navigate}}));
+        dispatch(login({ email, password }));
+        navigate('/');
     
 }
  return (

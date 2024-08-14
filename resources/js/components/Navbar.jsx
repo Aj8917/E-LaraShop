@@ -8,6 +8,7 @@ const Navbar = () => {
     // Access cart state from Redux store
     const cartItems = useSelector((state) => state.cart.cartItems);
     const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+    const user = JSON.stringify(localStorage.getItem('user'));
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,8 +24,9 @@ const Navbar = () => {
                     </li>
                     */}
                     
-                    { localStorage.getItem('user')}
+                    { !user && (
                     <Link className="navbar-brand" to="/login">Login</Link>
+                     )}   
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Profile

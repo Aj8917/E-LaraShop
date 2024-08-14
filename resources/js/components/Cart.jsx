@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { removeFromCart ,updateCartItem , checkout } from '../slices/CartSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart.cartItems);
-
+   
     const handleQuantityChange = (item, event) => {
         const newQuantity = parseInt(event.target.value);
         dispatch(updateCartItem({id:item.id,quantity:newQuantity}))
@@ -19,7 +20,18 @@ const Cart = () => {
 
     
     const handleCheckout=(cart)=>{
-        dispatch(checkout({ data: cart, navigate }))
+       
+        if (!cart || cart.length === 0) {
+            toast.error("Cart is empty or undefined");
+            return;
+        }
+    
+        const cartPayload = {
+            cartItems: cart,  // Ensure cartItems contains the cart data
+        };
+      
+    
+        dispatch(checkout({ data: cartPayload, navigate }));
     }
     const calculateTotal = () => {
         let totalQuantity = 0;
@@ -94,7 +106,7 @@ const Cart = () => {
                             <p className="card-text">Total Quantity: {totalQuantity}</p>
                             <p className="card-text">Total Price: $ <b>{totalPrice.toFixed(2)}</b></p>
                         </div>
-                        <Button className="w-100" onClick={()=>handleCheckout()}>Checkout</Button>
+                        <Button className="w-100" onClick={()=>handleCheckout(cart)}>Checkout</Button>
                     </div>
                 </div>
             )}
