@@ -18,11 +18,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentails)) {
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
-
+           
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user,
+                'user' => $user->name,
             ]);
 
 
@@ -35,6 +35,20 @@ class AuthController extends Controller
         $cartItems = $request->input('cartItems');
        
 
+    }
+
+    public function logout(Request $request)
+    {
+        // Invalidate the user's session or token
+        Auth::logout();
+
+        // Optionally, if you are using API tokens (e.g., Laravel Passport or Sanctum):
+        // $request->user()->tokens()->delete();
+
+        // Respond with a success message
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ], 200);
     }
 }
 

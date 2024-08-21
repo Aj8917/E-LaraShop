@@ -1,23 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
-
+import { handleResponse, handleError } from '../util/StatusError';
+import asyncHandler from "../util/asyncHandler";
 
 const initialState = {
     value: 0,
     cartItems: [], // To store the items in the cart
-
-}
+};
 
 export const CartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
         addToCart: (state, action) => {
-
             const { data } = action.payload;
-
             if (data && data.quantity !== undefined) {
                 state.cartItems.push(data);
                 state.value += data.quantity;
@@ -25,77 +22,74 @@ export const CartSlice = createSlice({
                 console.error('Invalid data payload:', data);
             }
         },
-
         removeFromCart: (state, action) => {
             const { itemId } = action.payload;
-
             const itemIndex = state.cartItems.findIndex(item => item.id === itemId);
-
             if (itemIndex !== -1) {
                 state.value -= state.cartItems[itemIndex].quantity;
                 state.cartItems.splice(itemIndex, 1);
             } else {
-                console.error('item not found');
+                console.error('Item not found');
             }
-
         },
-
         updateCartItem: (state, action) => {
             const { id, quantity } = action.payload;
-
             const item = state.cartItems.find(item => item.id === id);
-
             if (item) {
                 state.value = state.value - item.quantity + quantity;
                 item.quantity = quantity;
             }
-
         },
-        checkout: async (state, action) => {
+        checkout: asyncHandler(async (state, action) => {
             const { data, navigate } = action.payload;
             state.loading = true;
+        
             try {
                 const response = await axios.post('/api/orders', { cartItems: data.cartItems }, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}` // Add the token if needed
                     }
                 });
-
-                if (response.status === 200 || response.status === 201 ) {
-                    //console.log(response.data)
-                    navigate('/address')
-                    toast.success('Checkout successful!');
-                } else {
-                    navigate('/FileHandling');
-                    toast.error('Unexpected response from server.');
-                }
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    // Unauthorized, prompt for login
-                    navigate('/login')
-                    toast.error('Unauthorized: Please log in again.');
-
-                } else {
-                    navigate('/cart')
-                    if (error.response && error.response.data && error.response.data.errors) {
-                        const errors = error.response.data.errors;
-                        const errorMessages = Object.values(errors)
-                            .flat()
-                            .map(err => `• ${err}`) // Prefix each error with a bullet point
-                            .join('\n'); // Join errors with a newline character for list formatting
-                            toast.error(`Checkout error:\n${errorMessages}`);
+        
+                // Handle order IDs
+                let orderIds = [];
+                if (response.data.orders) {
+                    if (Array.isArray(response.data.orders)) {
+                        orderIds = response.data.orders.map(order => order.order_id);
+                    } else if (response.data.orders.order_id) {
+                        orderIds = [response.data.orders.order_id];
                     }
                 }
-            }
-        },
+        
+                localStorage.setItem('order_id', JSON.stringify(orderIds));
+
+               
+        
+                // Optionally handle success response here
+                // handleResponse(response, 'Checkout successful!');
+                
+        
+            } catch (error) {
+                // Error handling with a separate utility function
+               
+                handleError(error);
+            } 
+        }),
+        
+
+        saveAddress: async (state, action) => {
+            const { city, address } = action.payload;
+            console.log(state.order_id);
+        }
     }
-})
+});
 
 export const {
     addToCart,
     removeFromCart,
     updateCartItem,
-    checkout
+    checkout,
+    saveAddress,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

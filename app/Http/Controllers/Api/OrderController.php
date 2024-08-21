@@ -36,24 +36,28 @@ class OrderController extends Controller
 
         $userId = auth()->user()->id;
         $cartItems = $storeOrderRequest->input('cartItems');
+        $order_id = uniqid('order_'); // Generate a unique order ID for each order
 
         $createdOrders = [];
-
         foreach ($cartItems as $cart) {
+          
             $createdOrder = Order::create([
                 'user_id' => $userId,
+                'order_id' => $order_id,
                 'product_id' => $cart['id'],
                 'quantity' => $cart['quantity'],
                 'total_amount' => $cart['price'],
-                'status' => 'pending',
+                'status' => "pending",
             ]);
 
             $createdOrders[] = $createdOrder;
         }
 
+
         return response()->json([
             'message' => 'Order(s) created successfully',
-            'orders' => $createdOrders,
+            'order_number' => $order_id,
+            
         ], 201);
     }
 

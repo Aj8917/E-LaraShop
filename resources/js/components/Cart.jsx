@@ -4,6 +4,8 @@ import { Button } from 'react-bootstrap';
 import { removeFromCart ,updateCartItem , checkout } from '../slices/CartSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { handleResponse,handleError } from '../util/StatusError';
+import asyncHandler from '../util/asyncHandler';
 const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,20 +21,44 @@ const Cart = () => {
     };
 
     
-    const handleCheckout=(cart)=>{
-       
+    const handleCheckout = asyncHandler(async (cart) => {
         if (!cart || cart.length === 0) {
             toast.error("Cart is empty or undefined");
             return;
         }
     
         const cartPayload = {
-            cartItems: cart,  // Ensure cartItems contains the cart data
+            cartItems: cart, // Ensure cartItems contains the cart data
         };
-      
     
-        dispatch(checkout({ data: cartPayload, navigate }));
-    }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('You are not logged in. Please log in to proceed.');
+            navigate('/login');
+            return;
+        }
+    
+        // const resultAction =  dispatch(checkout({ data: cartPayload }));
+        // navigate('/address');
+        try {
+            const resultAction = await dispatch(checkout({ data: cartPayload }));
+           
+            if (resultAction && resultAction.type === 'cart/checkout') {
+                handleResponse(resultAction.payload, 'Checkout successful!');
+                navigate('/address');
+            } else {
+                const errorMessage = resultAction.error?.message || 'Checkout failed';
+                handleError({ message: errorMessage });
+                if (resultAction.error?.message === 'Unauthorized') {
+                    navigate('/login');
+                }
+            }
+        } catch (error) {
+            handleError(error);
+            navigate('/login');
+        }
+    });
+    
     const calculateTotal = () => {
         let totalQuantity = 0;
         let totalPrice = 0;

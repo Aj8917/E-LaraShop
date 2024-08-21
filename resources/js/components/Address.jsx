@@ -1,37 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { saveAddress } from '../slices/CartSlice'
 
 const Address = () => {
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
 
-  const cities = [
-      'New York',
-      'Los Angeles',
-      'Chicago',
-      'Houston',
-      'Phoenix'
-  ];
+    const dispatch = useDispatch();
 
-  const handleAddressChange = (e) => {
-      setAddress(e.target.value);
-  };
+    const cities = [
+        'New York',
+        'Los Angeles',
+        'Chicago',
+        'Houston',
+        'Phoenix'
+    ];
 
-  const handleCityChange = (e) => {
-      setCity(e.target.value);
-  };
+    const handleAddressChange = (e) => {
+        setAddress(e.target.value);
+    };
 
-  const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log('Address:', address);
-      console.log('City:', city);
-  };
+    const handleCityChange = (e) => {
+        setCity(e.target.value);
+    };
 
-  return (
-    <div className="d-flex flex-column min-vh-100">
-            <div className="container mt-5 flex-grow-1">
-            <div className="mb-3">
-                        <label htmlFor="city" className="form-label">City</label>
-                        
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle form submission logic here
+
+        dispatch(saveAddress({ city, address }));
+    };
+
+    return (
+        <div className="d-flex flex-column min-vh-100 bg-light py-4">
+            <div className="container mt-4 bg-white p-4 rounded shadow-sm">
+                <h2 className="mb-4">Enter Your Address</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="city" className="form-label">City </label>
                         <select
                             className="form-select"
                             id="city"
@@ -39,30 +45,27 @@ const Address = () => {
                             onChange={handleCityChange}
                             required
                         >
-                            <option value="" disabled>Select your city</option>
+                            <option value="" disabled>Select city</option>
                             {cities.map((city, index) => (
                                 <option key={index} value={city}>{city}</option>
                             ))}
                         </select>
                     </div>
 
-                <h2>Enter Your Address</h2>
-                <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="address" className="form-label">Address</label>
-                        <input
-                            type="text"
+                        <textarea
                             className="form-control"
                             id="address"
                             value={address}
                             onChange={handleAddressChange}
                             placeholder="Enter your address"
+                            rows="4"
                             required
                         />
                     </div>
 
-                    
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn btn-primary w-100">Submit</button>
                 </form>
             </div>
             <footer className="mt-auto py-3 bg-light text-center">
@@ -71,7 +74,7 @@ const Address = () => {
                 </div>
             </footer>
         </div>
-);
+    );
 }
 
-export default Address
+export default Address;

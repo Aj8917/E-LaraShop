@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 use App\Models\Order;
+use App\Observers\OrderObserver;
 use App\Policies\OrderPolicy;
 use Gate;
 use Illuminate\Support\ServiceProvider;
@@ -22,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Order::class, OrderPolicy::class);
+        Order::observe(OrderObserver::class);
     }
 }
