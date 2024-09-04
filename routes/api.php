@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CitiesController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\AuthController;
@@ -23,6 +24,9 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::post('/checkout',[OrderController::class,'store']);
     Route::apiResource('orders',OrderController::class);
+    
+    Route::post('/saveAddress',[OrderController::class, 'storeAddress']);
 });
+Route::get('/fetchCities',CitiesController::class);
 // For API routes
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/logout', [AuthController::class, 'logout']); 

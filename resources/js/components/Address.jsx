@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { saveAddress } from '../slices/CartSlice'
+import axios from 'axios';
+import { error } from 'laravel-mix/src/Log';
+import { handleError } from '../util/StatusError';
 
 const Address = () => {
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
+    const [cities , setCities] = useState([]);
 
     const dispatch = useDispatch();
 
-    const cities = [
-        'New York',
-        'Los Angeles',
-        'Chicago',
-        'Houston',
-        'Phoenix'
-    ];
-
+    // const cities = [
+    //     'New York',
+    //     'Los Angeles',
+    //     'Chicago',
+    //     'Houston',
+    //     'Phoenix'
+    // ];
+    
+    useEffect(()=>{
+        
+            axios.get('/api/fetchCities')
+                                 .then(res=>{
+                                    setCities(res.data);
+                                }).catch(error=>{
+                                    handleError(error);
+                                })
+    },[]);
+   
     const handleAddressChange = (e) => {
         setAddress(e.target.value);
     };
@@ -27,7 +41,7 @@ const Address = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle form submission logic here
-
+        
         dispatch(saveAddress({ city, address }));
     };
 
@@ -46,8 +60,10 @@ const Address = () => {
                             required
                         >
                             <option value="" disabled>Select city</option>
-                            {cities.map((city, index) => (
-                                <option key={index} value={city}>{city}</option>
+                            {cities.map((cityObj) => (
+                                <option key={cityObj.id} value={cityObj.id}>
+                                    {cityObj.city}
+                                </option>
                             ))}
                         </select>
                     </div>

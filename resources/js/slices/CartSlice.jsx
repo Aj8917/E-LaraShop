@@ -53,14 +53,14 @@ export const CartSlice = createSlice({
         
                 // Handle order IDs
                 let orderIds = [];
-                if (response.data.orders) {
-                    if (Array.isArray(response.data.orders)) {
-                        orderIds = response.data.orders.map(order => order.order_id);
-                    } else if (response.data.orders.order_id) {
-                        orderIds = [response.data.orders.order_id];
-                    }
+                if (response.data.order_id) {
+                    orderIds = [response.data.order_id];
+                } else if (response.data.orders && Array.isArray(response.data.orders)) {
+                    orderIds = response.data.orders.map(order => order.order_id);
                 }
-        
+                
+               // console.log('response: ' + JSON.stringify(response.data));
+                
                 localStorage.setItem('order_id', JSON.stringify(orderIds));
 
                
@@ -74,13 +74,26 @@ export const CartSlice = createSlice({
                
                 handleError(error);
             } 
-        }),
+        }
+        ),
         
-
         saveAddress: async (state, action) => {
             const { city, address } = action.payload;
-            console.log(state.order_id);
-        }
+            const orderId = JSON.parse(localStorage.getItem('order_id')); 
+         
+            try {
+                const response = await axios.post('/api/saveAddress', { city_id:city , address:address , order_id:orderId }, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}` // Add the token if needed
+                    }
+                });
+
+                 handleResponse(response, 'Address Saved !');
+          } catch (error) {
+            handleError(error);
+          }
+          
+        },
     }
 });
 

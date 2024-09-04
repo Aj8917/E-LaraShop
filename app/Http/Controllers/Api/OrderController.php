@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\StoreOrderRequest;
+use App\Models\Address;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Gate;
@@ -23,8 +25,7 @@ class OrderController extends Controller
     public function create(StoreOrderRequest $storeOrderRequest, Order $order)
     {
 
-
-
+   
     }
 
     /**
@@ -56,7 +57,7 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'Order(s) created successfully',
-            'order_number' => $order_id,
+            'order_id' => $order_id,
             
         ], 201);
     }
@@ -91,5 +92,27 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function storeAddress(StoreAddressRequest $request){
+        
+        $city_id = $request->input('city_id');
+        $address = $request->input('address');
+        $order_id = $request->input('order_id');
+
+        $data = [
+            'city_id' => $city_id,
+            'address' => $address,
+            'order_id' => $order_id[0],
+        ];
+
+         Address::create($data);
+
+        return response()->json([
+            'message' => 'Address Saved successfully',
+            'order_id' => $order_id[0],
+            
+        ], 201);
+
     }
 }

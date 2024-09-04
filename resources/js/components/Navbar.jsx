@@ -6,17 +6,19 @@ import { logout } from '../slices/AuthSlice'
 
 const Navbar = () => {
     // Access cart state from Redux store
-    const cartItems = useSelector((state) => state.cart.cartItems);
+    const cartItems = useSelector((state) => state.cart.cartItems || []);
+
     const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
-    const user = JSON.stringify(localStorage.getItem('user'));
+    
+    const user = JSON.parse(localStorage.getItem('user'));
     const dispatch = useDispatch();
-    const navigate =useNavigate();
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
             dispatch(logout()); // Call the logout action
             localStorage.removeItem('user'); // Clear user data from localStorage
-            navigate('/');        
+            navigate('/');
 
         } catch (error) {
             console.error('Logout failed', error);
@@ -40,12 +42,11 @@ const Navbar = () => {
                         <Link className="navbar-brand" to="/login">Login</Link>
                     ) : ('')}
 
-                    {user || user.name?(
+                    {user || user !== 'null'? (
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <b>  {JSON.parse(user).replaceAll("\"", "")}</b>
+                                <b>{user}</b>
                             </a>
-                            
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a className="dropdown-item" href="#">Action</a>
                                 <a className="dropdown-item" href="#">Another action</a>
@@ -53,14 +54,13 @@ const Navbar = () => {
                                 <a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>
                             </div>
                         </li>
-                    ):('')}
+                    ) : 'NO Name'}
 
-            
-            </ul>
-            <Link className="nav-link" to="/cart">
-                <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{totalQuantity}</span>
-            </Link>
-        </div>
+                </ul>
+                <Link className="nav-link" to="/cart">
+                    <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{totalQuantity}</span>
+                </Link>
+            </div>
         </nav >
     );
 };
