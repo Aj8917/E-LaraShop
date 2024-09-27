@@ -57,7 +57,9 @@ const Navbar = () => {
                     ) : 'NO Name'}
 
                 </ul>
-                <Link className="nav-link" to="/cart">
+                 <Link 
+                  className={`nav-link ${totalQuantity === 0 ? 'disabled' : ''}`} 
+                  to="/cart" >
                     <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{totalQuantity}</span>
                 </Link>
             </div>

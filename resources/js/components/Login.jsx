@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { login } from '../slices/AuthSlice';
-import {useNavigate } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -59,6 +59,9 @@ const handleLogin=()=>{
             >
                 Login
             </button>
+            <div className='mt-2'>
+            Not Memeber Yet ? <Link to='/register' id='register-link'> Register Now ! </Link>
+            </div>
         </form>
     </div>
 </div>

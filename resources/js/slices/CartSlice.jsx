@@ -58,21 +58,10 @@ export const CartSlice = createSlice({
                 } else if (response.data.orders && Array.isArray(response.data.orders)) {
                     orderIds = response.data.orders.map(order => order.order_id);
                 }
-                
-               // console.log('response: ' + JSON.stringify(response.data));
-                
                 localStorage.setItem('order_id', JSON.stringify(orderIds));
-
-               
-        
-                // Optionally handle success response here
-                // handleResponse(response, 'Checkout successful!');
-                
         
             } catch (error) {
-                // Error handling with a separate utility function
-               
-                handleError(error);
+               handleError(error);
             } 
         }
         ),

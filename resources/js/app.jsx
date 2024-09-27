@@ -13,7 +13,7 @@ import Login from './components/Login';
 import Address from './components/Address'
 import FileHandling from './components/Errors/FileHandling'
 import NotFound from './components/Errors/NotFound'
-
+import Register from './components/Register';
 const App = () => {
     // return <h1>Welcome!</h1>;
 };
@@ -44,8 +44,10 @@ root.render(
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/address" element={<Address />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="FileHandling" element={<FileHandling />} />
+                
             </Routes>
         </Router>
     </Provider>

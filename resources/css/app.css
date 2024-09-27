@@ -34,6 +34,17 @@
     font-family: Chango;
   }
   
+  #register-link {
+      position: relative;
+      padding: 1px;
+      background-color: #db6f1c; /* Blue background color */
+      color: rgb(94, 26, 203); /* White text color */
+      text-align: center; /* Center text */
+      font-size: 1.2em; /* Increase font size */
+      animation: flash 3s infinite; /* Flashing animation */
+      margin: 1% 1% 2% 1%;
+      font-family: Chango;
+    }
   @keyframes flash {
     0%, 100% {
       opacity: 1; /* Fully visible */
