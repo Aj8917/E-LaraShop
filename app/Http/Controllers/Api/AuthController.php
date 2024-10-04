@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\RegistrationSuccessful;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,8 +76,10 @@ class AuthController extends Controller
             ], 422);
         }
 
-       User::create($request->all());
+       $user=User::create($request->all());
        
+        event(new RegistrationSuccessful($user));
+
         return response()->json([
             'message' => 'Registertation Done.',
         ], 201);
