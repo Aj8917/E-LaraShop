@@ -8,9 +8,10 @@ use App\Models\Products;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Products::all();
+        $productsPerPage = 3;
+        $products = Products::paginate($productsPerPage);
         $defaultImageUrl = asset('images/default.png');
         
         // Add the default image URL to products with missing images

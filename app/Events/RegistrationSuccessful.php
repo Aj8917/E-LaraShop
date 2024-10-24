@@ -21,7 +21,7 @@ class RegistrationSuccessful
     {
         $this->user = $user;
     }
-
+    
     /**
      * Get the channels the event should broadcast on.
      *
