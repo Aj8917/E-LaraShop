@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('addresses')) {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id');
-            $table->integer('city_id');
-            $table->string('address');
+            $table->string('name');
             $table->timestamps();
-
-            $table->foreign('order_id')->references('order_id')->on('orders');
         });
-     }
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('role_id')->constrained('roles');
+        });
     }
 
     /**
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('roles');
     }
 };

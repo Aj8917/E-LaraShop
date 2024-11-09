@@ -20,13 +20,13 @@ const Navbar = () => {
             localStorage.removeItem('user'); // Clear user data from localStorage
             navigate('/');
 
-        } catch (error) {
+        } catch (error) { navigate('/');
             console.error('Logout failed', error);
         }
     };
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <Link className="navbar-brand" to="/">Home</Link>
+            <Link className="navbar-brand text-white dark:text-white/70" to="/">Home</Link>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
             </button>
@@ -38,14 +38,14 @@ const Navbar = () => {
                     </li>
                     */}
 
-                    {!user || user === 'null' ? (
-                        <Link className="navbar-brand" to="/login">Login</Link>
+                    {!user  ? (
+                        <Link className="navbar-brand text-white dark:text-white/70" to="/login">Login</Link>
                     ) : ('')}
 
-                    {user || user !== 'null'? (
-                        <li className="nav-item dropdown">
+                    {user ? (
+                        <li className="nav-item dropdown ">
                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <b>{user}</b>
+                                <b className="text-white dark:text-white/70">{user.name}</b>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a className="dropdown-item" href="#">Action</a>
@@ -54,7 +54,7 @@ const Navbar = () => {
                                 <a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>
                             </div>
                         </li>
-                    ) : 'NO Name'}
+                    ) : ''}
 
                 </ul>
                  <Link 

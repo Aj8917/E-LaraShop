@@ -75,7 +75,7 @@ const Cart = () => {
         <div className="container mt-5">
         <h1>Cart</h1>
         <div className="row">
-            <div className={`col-md-8 ${cart && cart.length > 0 ? 'mb-5' : ''}`}>
+            <div className={`col-md-8 ${cart && cart.length > 0 ? 'mb-1' : ''}`}>
                 {cart && cart.length > 0 ? (
                     cart.map(item => (
                         <div key={item.id} className="card mb-3" style={{ maxWidth: '600px' }}>
@@ -84,7 +84,7 @@ const Cart = () => {
                                 className="card-img-top"
                                 alt={item.title}
                             />
-                            <div className="card-body">
+                            <div className="card-body cart">
                                 <h5 className="card-title">{item.title}</h5>
                                 <p className="card-text">{item.description}</p>
                                 <p className="card-text"><strong>Price: ${item.price}</strong></p>
@@ -110,7 +110,7 @@ const Cart = () => {
                         </div>
                     ))
                 ) : (
-                     <div className="d-flex justify-content-center align-items-center flex-column min-vh-100">
+                     <div className="d-flex justify-content-center align-items-center flex-column min-vh-100 cart">
                         <div className="text-center">
                             <h2 className="mb-3">Your Cart is Empty</h2>
                             <p className="mb-4">Looks like you haven't added anything to your cart yet.</p>
@@ -124,9 +124,9 @@ const Cart = () => {
                 )}
             </div>
             {cart && cart.length > 0 && (
-                <div className="col-md-4">
-                    <h2>Summary</h2>
-                    <div className="card" style={{ width: '100%' }}>
+                <div className="col-md-4 text-white dark:text-white/70">
+                    <h2 >Summary</h2>
+                    <div className="card cart" style={{ width: '100%' }}>
                         <div className="card-body">
                             <h5 className="card-title">Cart Summary</h5>
                             <p className="card-text">Total Quantity: {totalQuantity}</p>

@@ -32,13 +32,13 @@ const Home = () => {
 
 
     return (
-        <div className="container">
+        <div className="container ">
             <h1 className="my-4">Product List</h1>
             <div className="row">
                 {products.map(product => (
-                    <div className="col-md-4 mb-4" key={product.id}>
+                    <div className="col-md-4 mb-4 " key={product.id}>
                         <Link to={`/product/${product.id}`}>
-                            <div className="card">
+                            <div className="card cart">
                                 <img
                                     src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
                                     className="card-img-top"
@@ -57,7 +57,7 @@ const Home = () => {
                 ))}
 
             </div>
-            <div className="d-flex justify-content-center align-items-center mt-4">
+            <div className="d-flex justify-content-center align-items-center mt-4 text-white dark:text-white/70">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
@@ -65,7 +65,7 @@ const Home = () => {
                 >
                     ←
                 </button>
-                <span>Page {currentPage} of {lastPage}</span>
+                <span> Page {currentPage} of {lastPage} </span>
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === lastPage}

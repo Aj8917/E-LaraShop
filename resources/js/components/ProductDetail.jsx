@@ -15,7 +15,7 @@ const ProductDetail = () => {
     const [error, setError] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const dispatch =useDispatch();
-
+    
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -70,7 +70,7 @@ const ProductDetail = () => {
             </div>
             
             {product ? (
-                <div className="card mx-auto" style={{ maxWidth: '600px' }}>
+                <div className="card mx-auto cart" style={{ maxWidth: '600px' }}>
                     <img
                         src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
                         className="card-img-top"

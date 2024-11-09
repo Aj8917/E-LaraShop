@@ -15,9 +15,21 @@ export const CartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const { data } = action.payload;
+    
             if (data && data.quantity !== undefined) {
-                state.cartItems.push(data);
-                state.value += data.quantity;
+                // Find if the product already exists in the cart by its ID
+                const existingProduct = state.cartItems.find(item => item.id === data.id);
+                
+                if (existingProduct) {
+                    // If the product is already in the cart, update its quantity
+                    existingProduct.quantity += data.quantity;
+                } else {
+                    // If the product is not in the cart, add it as a new entry
+                    state.cartItems.push(data);
+                }
+                
+                // Update the total cart quantity value
+                state.value = state.cartItems.reduce((total, item) => total + item.quantity, 0);
             } else {
                 console.error('Invalid data payload:', data);
             }
