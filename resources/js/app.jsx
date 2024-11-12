@@ -51,7 +51,7 @@ const AppRoutes = () => (
 );
 
 const AdminRoutes = () => (
-   
+ 
   <Routes>
     {/* Admin-Only Routes */}
     <Route path="/admin/dashboard" element={<AdminDashboard />} />

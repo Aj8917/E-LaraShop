@@ -46,8 +46,8 @@ const Address = () => {
     };
 
     return (
-        <div className="d-flex flex-column min-vh-100 bg-light py-4">
-            <div className="container mt-4 bg-white p-4 rounded shadow-sm">
+        <div className="d-flex flex-column min-vh-100  py-4a ">
+            <div className="container mt-4  p-4 rounded shadow-m address-box">
                 <h2 className="mb-4">Enter Your Address</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
@@ -84,11 +84,7 @@ const Address = () => {
                     <button type="submit" className="btn btn-primary w-100">Submit</button>
                 </form>
             </div>
-            <footer className="mt-auto py-3 bg-light text-center">
-                <div className="container">
-                    <span className="text-muted">Your footer content here</span>
-                </div>
-            </footer>
+           
         </div>
     );
 }

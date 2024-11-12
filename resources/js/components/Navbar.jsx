@@ -10,7 +10,9 @@ const Navbar = () => {
 
     const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
     
-    const user = JSON.parse(localStorage.getItem('user'));
+    //const user = JSON.parse(localStorage.getItem('user'));
+    const user = useSelector((state) => state.auth?.userData?.user || JSON.parse(localStorage.getItem('user')));
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -20,7 +22,8 @@ const Navbar = () => {
             localStorage.removeItem('user'); // Clear user data from localStorage
             navigate('/');
 
-        } catch (error) { navigate('/');
+        } catch (error) { 
+            navigate('/');
             console.error('Logout failed', error);
         }
     };
@@ -45,7 +48,7 @@ const Navbar = () => {
                     {user ? (
                         <li className="nav-item dropdown ">
                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <b className="text-white dark:text-white/70">{user.name}</b>
+                                <b className="text-white dark:text-white/70">{user?.name}</b>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a className="dropdown-item" href="#">Action</a>
