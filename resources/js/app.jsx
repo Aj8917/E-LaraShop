@@ -54,10 +54,7 @@ const AdminRoutes = () => (
  
   <Routes>
     {/* Admin-Only Routes */}
-    <Route path="/admin/dashboard" element={<AdminDashboard />} />
-    
-    <Route path="*" element={<Navigate to="/admin/dashboard" />} />
-    
+    <Route path="/" element={<AdminDashboard />} />
     
   </Routes>
 );

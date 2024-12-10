@@ -20,6 +20,7 @@ const Navbar = () => {
         try {
             dispatch(logout()); // Call the logout action
             localStorage.removeItem('user'); // Clear user data from localStorage
+          // console.log('Navigating to home...');
             navigate('/');
 
         } catch (error) { 
