@@ -9,7 +9,10 @@ class City extends Model
 {
     use HasFactory;
    
-   
+    public function address()
+    {
+        return $this->hasMany(Address::class, 'city_id', 'id');
+    }
     
     public function toArray()
     {

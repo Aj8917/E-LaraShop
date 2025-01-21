@@ -22,6 +22,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchProducts(currentPage); // Fetch products for the current page
+        document.title = 'Welcome to E-Larashop';
     }, [currentPage]);
 
     const handlePageChange = (page) => {

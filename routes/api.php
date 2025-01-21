@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('orders', OrderController::class);
     Route::post('/saveAddress', [OrderController::class, 'storeAddress']);
     Route::patch('/products/{id}/refuse', [ProductController::class, 'refuseProduct']);
-
+    Route::post('/fetchOrderDetails/{id}',[OrderController::class ,'show']);
 
 });
 

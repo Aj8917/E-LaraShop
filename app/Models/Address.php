@@ -12,14 +12,17 @@ class Address extends Model
     protected $fillable=['order_id','city_id','address'];
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
-    
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id', 'id');
+    }
     public function toArray()
     {
         return [
             'order_id' => $this->order ? $this->order->order_id : null,
-            'city_id' => $this->city_id,
+            'name' => $this->city ? $this->city->name : null, // Add city name
             'address' => $this->address,
             ];
     }

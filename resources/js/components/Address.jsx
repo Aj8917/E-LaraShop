@@ -4,6 +4,7 @@ import { saveAddress } from '../slices/CartSlice'
 import axios from 'axios';
 import { error } from 'laravel-mix/src/Log';
 import { handleError } from '../util/StatusError';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Address = () => {
     const [address, setAddress] = useState('');
@@ -11,7 +12,7 @@ const Address = () => {
     const [cities , setCities] = useState([]);
 
     const dispatch = useDispatch();
-
+    const navigate =useNavigate();
     // const cities = [
     //     'New York',
     //     'Los Angeles',
@@ -42,7 +43,8 @@ const Address = () => {
         e.preventDefault();
         // Handle form submission logic here
         
-        dispatch(saveAddress({ city, address }));
+      dispatch(saveAddress({ city, address }));
+            navigate('/paymentPage');
     };
 
     return (

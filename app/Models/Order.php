@@ -27,15 +27,20 @@ class Order extends Model
     {
         return $this->belongsTo(Products::class);
     }
-
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'order_id', 'order_id');
+    }
     public function toArray()
     {
         return [
             'id' => $this->id,
             'product' => $this->product->title,
+            'image' => $this->product->image,
             'quantity' => $this->quantity,
             'total_amount' => $this->total_amount,
             'status' => $this->status,
+            'address' => $this->address ? $this->address->toArray() : null,
         ];
     }
 

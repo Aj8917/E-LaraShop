@@ -9,10 +9,10 @@ const Navbar = () => {
     const cartItems = useSelector((state) => state.cart.cartItems || []);
 
     const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
-    
+
     //const user = JSON.parse(localStorage.getItem('user'));
     const user = useSelector((state) => state.auth?.userData?.user || JSON.parse(localStorage.getItem('user')));
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -20,10 +20,16 @@ const Navbar = () => {
         try {
             dispatch(logout()); // Call the logout action
             localStorage.removeItem('user'); // Clear user data from localStorage
-          // console.log('Navigating to home...');
-            navigate('/');
+            
+            if (user?.role === 'Admin') {
+                console.log('Navigating to home...'+user?.role);
+                navigate('/login'); // Redirect to the home page or a different page suitable for admin 
+            }
+            else { 
+                navigate('/'); 
+            }// Redirect to the home page for general users
 
-        } catch (error) { 
+        } catch (error) {
             navigate('/');
             console.error('Logout failed', error);
         }
@@ -41,8 +47,8 @@ const Navbar = () => {
                         <Link className="nav-link" to="/">Home</Link>
                     </li>
                     */}
-
-                    {!user  ? (
+   {/* <Link className="navbar-brand text-white dark:text-white/70" to="/paymentPage">paymentPage</Link> */}
+                    {!user ? (
                         <Link className="navbar-brand text-white dark:text-white/70" to="/login">Login</Link>
                     ) : ('')}
 
@@ -61,9 +67,9 @@ const Navbar = () => {
                     ) : ''}
 
                 </ul>
-                 <Link 
-                  className={`nav-link ${totalQuantity === 0 ? 'disabled' : ''}`} 
-                  to="/cart" >
+                <Link
+                    className={`nav-link ${totalQuantity === 0 ? 'disabled' : ''}`}
+                    to="/cart" >
                     <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{totalQuantity}</span>
                 </Link>
             </div>

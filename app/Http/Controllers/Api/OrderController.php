@@ -25,7 +25,7 @@ class OrderController extends Controller
     public function create(StoreOrderRequest $storeOrderRequest, Order $order)
     {
 
-   
+
     }
 
     /**
@@ -41,13 +41,13 @@ class OrderController extends Controller
 
         $createdOrders = [];
         foreach ($cartItems as $cart) {
-          
+
             $createdOrder = Order::create([
                 'user_id' => $userId,
                 'order_id' => $order_id,
                 'product_id' => $cart['id'],
                 'quantity' => $cart['quantity'],
-                'total_amount' => $cart['price'],
+                'total_amount' => $cart['price']*$cart['quantity'],
                 'status' => "pending",
             ]);
 
@@ -58,7 +58,7 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Order(s) created successfully',
             'order_id' => $order_id,
-            
+
         ], 201);
     }
 
@@ -67,7 +67,16 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $orders = Order::with('address.city')
+        ->where('order_id', $id)
+        ->get();
+
+    // Authorize viewing the orders (assuming authorization applies to all records in the result)
+    foreach ($orders as $order) {
+        Gate::authorize('view', $order);
+    }
+
+    return response()->json($orders);
     }
 
     /**
@@ -94,8 +103,9 @@ class OrderController extends Controller
         //
     }
 
-    public function storeAddress(StoreAddressRequest $request){
-        
+    public function storeAddress(StoreAddressRequest $request)
+    {
+
         $city_id = $request->input('city_id');
         $address = $request->input('address');
         $order_id = $request->input('order_id');
@@ -106,12 +116,12 @@ class OrderController extends Controller
             'order_id' => $order_id[0],
         ];
 
-         Address::create($data);
+        Address::create($data);
 
         return response()->json([
             'message' => 'Address Saved successfully',
             'order_id' => $order_id[0],
-            
+
         ], 201);
 
     }
