@@ -17,6 +17,7 @@ import Register from './components/Register';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PaymentPage from './components/PaymentPage';
 import DeliveryDetails from './components/DeliveryDetails';
+import MyOrders from './components/MyOrders';
 
 // Function to check user role
 const getUserRole = () => {
@@ -45,6 +46,7 @@ const AppRoutes = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/address" element={<Address />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/MyOrders" element={<MyOrders />} />
         <Route path="/FileHandling" element={<FileHandling />} />
         <Route path="/paymentPage" element={<PaymentPage />}/>
         <Route path="/delivery" element={<DeliveryDetails />}/>
@@ -66,9 +68,9 @@ const App = () => {
 
     useEffect(() => {
         if (userRole === 'Admin' && window.location.pathname !== '/admin') {
-            navigate('/admin');
+            navigate('/');
         } else if (userRole === null && window.location.pathname !== '/login') {
-            navigate('/login');
+            navigate('/');
         }
     }, [userRole, navigate]);
 

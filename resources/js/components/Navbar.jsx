@@ -21,14 +21,9 @@ const Navbar = () => {
             dispatch(logout()); // Call the logout action
             localStorage.removeItem('user'); // Clear user data from localStorage
             
-            if (user?.role === 'Admin') {
-                console.log('Navigating to home...'+user?.role);
-                navigate('/login'); // Redirect to the home page or a different page suitable for admin 
-            }
-            else { 
+           
                 navigate('/'); 
-            }// Redirect to the home page for general users
-
+           
         } catch (error) {
             navigate('/');
             console.error('Logout failed', error);
@@ -58,7 +53,8 @@ const Navbar = () => {
                                 <b className="text-white dark:text-white/70">{user?.name}</b>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a className="dropdown-item" href="#">Action</a>
+                               
+                                <Link className="dropdown-item" to="/MyOrders"><i class="bi bi-list-stars"></i> My Orders</Link>
                                 <a className="dropdown-item" href="#">Another action</a>
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>

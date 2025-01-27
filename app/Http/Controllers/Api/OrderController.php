@@ -47,7 +47,7 @@ class OrderController extends Controller
                 'order_id' => $order_id,
                 'product_id' => $cart['id'],
                 'quantity' => $cart['quantity'],
-                'total_amount' => $cart['price']*$cart['quantity'],
+                'total_amount' => $cart['price'] * $cart['quantity'],
                 'status' => "pending",
             ]);
 
@@ -68,15 +68,15 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $orders = Order::with('address.city')
-        ->where('order_id', $id)
-        ->get();
+            ->where('order_id', $id)
+            ->get();
 
-    // Authorize viewing the orders (assuming authorization applies to all records in the result)
-    foreach ($orders as $order) {
-        Gate::authorize('view', $order);
-    }
+        // Authorize viewing the orders (assuming authorization applies to all records in the result)
+        foreach ($orders as $order) {
+            Gate::authorize('view', $order);
+        }
 
-    return response()->json($orders);
+        return response()->json($orders);
     }
 
     /**
@@ -124,5 +124,21 @@ class OrderController extends Controller
 
         ], 201);
 
-    }
+    }//storeAddress
+
+    public function order_history(Request $request)
+    {
+        $user = $request->user(); // Get authenticated user
+        
+        $orders = Order::with('address.city')
+            ->where('user_id', $user->id)
+            ->whereNot('status','pending')
+            ->get();
+    
+        if($orders->isEmpty()){
+            return response()->json('No data Found', 204);
+        }else{
+            return response()->json($orders);
+        }
+    }//order_history
 }
