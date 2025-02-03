@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { store } from './store';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import Home from './components/Home';
 import ProductDetail from './components/ProductDetail';
 import Navbar from './components/Navbar';
@@ -18,12 +18,9 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 import PaymentPage from './components/PaymentPage';
 import DeliveryDetails from './components/DeliveryDetails';
 import MyOrders from './components/MyOrders';
-
+import VendorDashboard from './components/Vendors/VendorDashboard';
 // Function to check user role
-const getUserRole = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user ? user.role : null; // Return role if user exists
-};
+
 
 const Flash = () => {
     return <div id="banner">Sales For Today!</div>;
@@ -61,27 +58,40 @@ const AdminRoutes = () => (
         <Route path="/admin/logout" element={<Login />} />
     </Routes>
 );
-
+const VendorRoutes = () => (
+    <Routes>
+        {/* Vendor-Only Routes */}
+        <Route path="/" element={<VendorDashboard />} />
+        <Route path="/vendor/logout" element={<Login />} />
+    </Routes>
+);
 const App = () => {
-    const [userRole, setUserRole] = useState(getUserRole());
+    const userData = useSelector((state) => state.auth.userData.user);
+    const userRole = userData ? userData.role : null;
     const navigate = useNavigate();
 
     useEffect(() => {
+       
         if (userRole === 'Admin' && window.location.pathname !== '/admin') {
-            navigate('/');
+            navigate('/admin');
+        } else if (userRole === 'Vendor' && window.location.pathname !== '/vendor') {
+            navigate('/vendor');
         } else if (userRole === null && window.location.pathname !== '/login') {
             navigate('/');
         }
     }, [userRole, navigate]);
-
+    
     return (
         <>
             <ToastContainer />
             <Navbar />
             <Routes>
-                {userRole === 'Admin' ? (
+            {userRole === 'Admin' ? (
                     // Admin routes
                     <Route path="/admin/*" element={<AdminRoutes />} />
+                ) : userRole === 'Vendor' ? (
+                    // Vendor routes
+                    <Route path="/vendor/*" element={<VendorRoutes />} />
                 ) : (
                     // General user routes
                     <Route path="/*" element={<AppRoutes />} />

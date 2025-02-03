@@ -19,11 +19,12 @@ const Navbar = () => {
     const handleLogout = async () => {
         try {
             dispatch(logout()); // Call the logout action
-            localStorage.removeItem('user'); // Clear user data from localStorage
             
+                navigate('/login'); 
            
-                navigate('/'); 
-           
+            localStorage.removeItem('user'); // Clear user data from localStorage
+            localStorage.removeItem('order_id'); // Clear user data from localStorage
+
         } catch (error) {
             navigate('/');
             console.error('Logout failed', error);
@@ -31,7 +32,9 @@ const Navbar = () => {
     };
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            {user?.role!=="Admin" ? (
             <Link className="navbar-brand text-white dark:text-white/70" to="/">Home</Link>
+        ) : ('')}
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
             </button>
@@ -53,8 +56,10 @@ const Navbar = () => {
                                 <b className="text-white dark:text-white/70">{user?.name}</b>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                               
+                            {user?.role!=="Admin" && user?.role!=="Vendor" ? (
                                 <Link className="dropdown-item" to="/MyOrders"><i class="bi bi-list-stars"></i> My Orders</Link>
+                            ) : ('')}
+                            
                                 <a className="dropdown-item" href="#">Another action</a>
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>

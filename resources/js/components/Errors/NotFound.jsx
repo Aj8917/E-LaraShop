@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const NotFound = () => {
   return (
@@ -10,9 +11,11 @@ const NotFound = () => {
         alt="Page not found illustration" 
         className="not-found-image"
     />
-    <button onClick={handleGoHome} className="not-found-button">
+     <Link className="navbar-brand text-white dark:text-white/70" to="/">
+    <button className="not-found-button">
         Go Back Home
     </button>
+    </Link>
 </div>
   )
 }
