@@ -13,15 +13,18 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const handleLogin = async () => {
-        // Dispatch the login action with the data
-        try {
-            dispatch(login({ email, password }));
-            navigate('/');
-        }
-        catch (error) {
-            toast.error(error);
-            navigate('/login');
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        const credentials = { email, password };
+        const resultAction = await dispatch(login(credentials));
+        if (login.fulfilled.match(resultAction)) {
+            if (resultAction.payload.role === 'Admin') {
+                navigate('/admin');
+            } else if (resultAction.payload.role === 'Vendor') {
+                navigate('/vendor');
+            } else {
+                navigate('/');
+            }
         }
     }
         return (
