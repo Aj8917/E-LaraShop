@@ -7,6 +7,7 @@ use App\Http\Requests\VendorRequest;
 use App\Models\inventory;
 use App\Models\Products;
 
+use Date;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
@@ -18,6 +19,26 @@ class VendorController extends Controller
      */
     public function index()
     {
+            $user_id= auth()->user()->id;
+           
+            $result=inventory::select('inventories.*')
+                             ->with('product')                   
+                            ->where('vendor_id',$user_id)
+                            ->orderBy('created_at', 'desc')
+                             ->get()
+                             ->map(function ($inventory) {
+                                return [
+                                    'title' => $inventory->product->title,
+                                    'description'=>$inventory->product->description,
+                                    'price'=>$inventory->product->price,
+                                    'image'=>$inventory->product->image,
+                                    'quantity'=>$inventory->quantity,
+                                    'created_at'=>Date('d-m-Y',strtotime($inventory->created_at))
+                                    
+                                ];
+                            });
+           // dd($result);
+            return response()->json($result , 201);
 
     }
 

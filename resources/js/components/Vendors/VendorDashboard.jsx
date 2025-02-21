@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Row, Col, Modal } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, Row, Col, Modal, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import asyncHandler from '../../util/asyncHandler';
 import axios from 'axios';
@@ -22,7 +22,8 @@ const VendorDashboard = () => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(null);
-
+  const [products,setProducts]=useState("");
+  const token=localStorage.getItem('token');
   const handleSubmit = asyncHandler(async (e) => {
     e.preventDefault();
 
@@ -31,7 +32,7 @@ const VendorDashboard = () => {
       const response = await axios.post('api/vendor', { title, description, price, quantity, image }
         , {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Add the token if needed
+            Authorization: `Bearer ${token}`, // Add the token if needed
             'Content-Type': 'multipart/form-data',
           }
         });
@@ -43,7 +44,22 @@ const VendorDashboard = () => {
     handleClose();
   });
 
-
+  useEffect(()=>{
+        
+    axios.get('/api/vendor',
+            {
+              headers:{
+                  Authorization : `Bearer ${token}`,
+              }
+            })
+                         .then(res=>{
+                         
+                            setProducts(res.data);
+                            // console.log(products[0].title)
+                        }).catch(error=>{
+                            handleError(error);
+                        })
+},[]);
 
   return (
     <div className="container">
@@ -124,6 +140,51 @@ const VendorDashboard = () => {
 
         </div>
       </Row>
+
+      
+ 
+      <div className="d-flex justify-content-center align-items-center flex-column min-vh-50  cart">
+                    <div className="text-center" style={{ color: 'black'  }}>
+                        {products.length > 0 ? (
+                            <table className="table table-boardered">
+                                <thead>
+                                    <tr>
+                                        <th>product ID</th>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                      
+                                        <th>Upload date</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {products.map((product, index) => (
+                                        <tr key={index}>
+                                            <td><img 
+                                                    src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
+                                                    alt="product" style={{ width: '50px', height: '50px' }} 
+                                                /></td>
+                                            <td>{product.title}</td>
+                                            <td>{product.description}</td>
+                                            <td>{product.quantity}</td>
+                                            <td>${product.price}</td>
+                                            <td>{product.created_at}</td>
+                                            
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p>No product details available.</p>
+                        )}
+                    </div>
+
+                </div>
+
+   
+      
     </div>
   );
 };
