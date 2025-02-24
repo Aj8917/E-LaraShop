@@ -22,8 +22,8 @@ const VendorDashboard = () => {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(null);
-  const [products,setProducts]=useState("");
-  const token=localStorage.getItem('token');
+  const [products, setProducts] = useState("");
+  const token = localStorage.getItem('token');
   const handleSubmit = asyncHandler(async (e) => {
     e.preventDefault();
 
@@ -37,29 +37,30 @@ const VendorDashboard = () => {
           }
         });
       handleResponse(response, response.data)
+      fetchProducts()
     } catch (error) {
       handleError(error);
     }
-    
+
     handleClose();
   });
 
-  useEffect(()=>{
-        
-    axios.get('/api/vendor',
-            {
-              headers:{
-                  Authorization : `Bearer ${token}`,
-              }
-            })
-                         .then(res=>{
-                         
-                            setProducts(res.data);
-                            // console.log(products[0].title)
-                        }).catch(error=>{
-                            handleError(error);
-                        })
-},[]);
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get('/api/vendor', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      setProducts(res.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <div className="container">
@@ -141,50 +142,59 @@ const VendorDashboard = () => {
         </div>
       </Row>
 
-      
- 
+
+
       <div className="d-flex justify-content-center align-items-center flex-column min-vh-50  cart">
-                    <div className="text-center" style={{ color: 'black'  }}>
-                        {products.length > 0 ? (
-                            <table className="table table-boardered">
-                                <thead>
-                                    <tr>
-                                        <th>product ID</th>
-                                        <th>Product</th>
-                                        <th>Description</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                      
-                                        <th>Upload date</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {products.map((product, index) => (
-                                        <tr key={index}>
-                                            <td><img 
-                                                    src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
-                                                    alt="product" style={{ width: '50px', height: '50px' }} 
-                                                /></td>
-                                            <td>{product.title}</td>
-                                            <td>{product.description}</td>
-                                            <td>{product.quantity}</td>
-                                            <td>${product.price}</td>
-                                            <td>{product.created_at}</td>
-                                            
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <p>No product details available.</p>
-                        )}
-                    </div>
+        <div className="text-center" style={{ color: 'black' }}>
+          {products.length > 0 ? (
+            <table className="table table-boardered">
+              <thead>
+                <tr>
+                  <th>product ID</th>
+                  <th>Product</th>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
 
-                </div>
+                  <th>Upload date</th>
+                  <th colSpan={2}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product, index) => (
+                  <tr key={index}>
+                    <td><img
+                      src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
+                      alt="product" style={{ width: '50px', height: '50px' }}
+                    /></td>
+                    <td>{product.title}</td>
+                    <td title={product.description}>
+                      {product.description.length > 50
+                        ? `${product.description.substring(0, 50)}...`
+                        : product.description}
+                    </td>
+                    <td>{product.quantity}</td>
+                    <td>${product.price}</td>
+                    <td>{product.created_at}</td>
+                    <td>
+                      <i class="bi bi-pencil-square"></i>
+                    </td>
+                    <td>
+                      <i class="bi bi-trash-fill"></i>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No product details available.</p>
+          )}
+        </div>
 
-   
-      
+      </div>
+
+
+
     </div>
   );
 };

@@ -23,7 +23,7 @@ class VendorRequest extends FormRequest
     {
         return [
             'title' => 'required|regex:/^[a-zA-Z0-9\s]*$/',
-            'description' => 'required|regex:/^[a-zA-Z0-9\s]*$/',
+            'description' => 'required',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
