@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Inventory;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -89,7 +90,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],
@@ -127,11 +128,16 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
-        'order_logs'=>[
+        'order_logs' => [
             'driver' => 'single',
             'path' => storage_path('logs/order_logs.log'),
             'level' => 'info',
-        ]
+        ],
+        'inventory_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/inventory_logs.log'),
+            'level' => 'debug', // try 'debug' to capture all levels
+        ],
     ],
 
 ];

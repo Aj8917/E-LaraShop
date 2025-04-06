@@ -8,7 +8,11 @@ import { handleError, handleResponse } from '../../util/StatusError';
 const VendorDashboard = () => {
 
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
   const handleClose = () => setShow(false);
+  
   const handleShow = () => {
     setShow(true);
     setTitle("");
@@ -17,6 +21,22 @@ const VendorDashboard = () => {
     setQuantity("");
     setImage(null);
   }
+
+  const handleCloseEdit = () => {
+    setShowEdit(false);
+    setSelectedProduct(null);
+  }; 
+
+  const handleShowEdit = (product) => {
+    setSelectedProduct(product);
+    setTitle(product.title);
+    setDescription(product.description);
+    setPrice(product.price);
+    setQuantity(product.quantity);
+    setImage(null); // Reset image for upload
+    setShowEdit(true);
+  };
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -24,6 +44,7 @@ const VendorDashboard = () => {
   const [image, setImage] = useState(null);
   const [products, setProducts] = useState("");
   const token = localStorage.getItem('token');
+  
   const handleSubmit = asyncHandler(async (e) => {
     e.preventDefault();
 
@@ -45,6 +66,42 @@ const VendorDashboard = () => {
     handleClose();
   });
 
+  const handleEditSubmit = asyncHandler(async (e) => {
+    e.preventDefault();
+    console.log(title);
+    try {
+      const response = await axios.put(
+        `/api/vendor/${selectedProduct.id}`,
+        { title, description, price, quantity},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+           
+          },
+        }
+      );
+      handleResponse(response, response.data);
+      fetchProducts();
+    } catch (error) {
+      handleError(error);
+    }
+    handleCloseEdit();
+  });
+
+  const handleDelete = asyncHandler(async (productId) => {
+    try {
+      const response = await axios.delete(`/api/vendor/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      handleResponse(response, response.data);
+      fetchProducts(); // Refresh the product list
+    } catch (error) {
+      handleError(error);
+    }
+  });
+  
   const fetchProducts = async () => {
     try {
       const res = await axios.get('/api/vendor', {
@@ -132,6 +189,68 @@ const VendorDashboard = () => {
           </Form>
         </Modal.Body>
       </Modal>
+      {/* Edit Product Modal */}
+      <Modal show={showEdit} onHide={handleCloseEdit}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleEditSubmit}>
+            <Form.Group controlId="formTitle">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Update Product name"
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formPrice">
+              <Form.Label>Price</Form.Label>
+              <Form.Control
+                type="text"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Update Price"
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formQuantity">
+              <Form.Label>Quantity</Form.Label>
+              <Form.Control
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                placeholder="Update Quantity"
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formDescription" className="mt-3">
+              <Form.Label>Item Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Update description"
+              />
+            </Form.Group>
+            {/* <Form.Group controlId="formFile" className="mt-3">
+              <Form.Label>Product Image</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
+            </Form.Group> */}
+            <Button variant="primary" type="submit" className="mt-3">
+              Save Changes
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+
 
       <Row>
         <div className="col-lg-8 mx-auto">
@@ -177,10 +296,17 @@ const VendorDashboard = () => {
                     <td>${product.price}</td>
                     <td>{product.created_at}</td>
                     <td>
-                      <i class="bi bi-pencil-square"></i>
+                    <i
+                        className="bi bi-pencil-square"
+                        onClick={() => handleShowEdit(product)}
+                        style={{ cursor: 'pointer' }}
+                      ></i>
+
                     </td>
                     <td>
-                      <i class="bi bi-trash-fill"></i>
+                      <i class="bi bi-trash-fill" 
+                      onClick={() => handleDelete(product.id)}
+                      style={{ cursor: 'pointer' }}></i>
                     </td>
                   </tr>
                 ))}
