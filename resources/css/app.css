@@ -278,3 +278,18 @@ html, body {
   color: rgb(171, 226, 19);
   font-size: 16px;
 }
+
+.blurred {
+  filter: blur(3px);
+  opacity: 0.6;
+}
+
+.disabled-link {
+  pointer-events: none;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.disabled-card {
+  opacity: 0.8;
+}

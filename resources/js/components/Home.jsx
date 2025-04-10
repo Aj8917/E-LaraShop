@@ -12,7 +12,7 @@ const Home = () => {
         axios.get(`/api/products?page=${page}`)
             .then(res => {
                 setProducts(res.data.data); // The actual products are inside the 'data' array
-                setCurrentPage(res.data.current_page);
+               // setCurrentPage(res.data.current_page);
                 setLastPage(res.data.last_page);
             })
             .catch(error => {
@@ -33,31 +33,36 @@ const Home = () => {
 
 
     return (
-        <div className="container ">
+        <div className="container">
             <h1 className="my-4">Product List</h1>
             <div className="row">
-                {products.map(product => (
-                    <div className="col-md-4 mb-4 " key={product.id}>
-                        <Link to={`/product/${product.id}`}>
-                            <div className="card cart">
-                                <img
-                                    src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
-                                    className="card-img-top"
-                                    alt={product.image}
-                                />
+                {products.map(product => {
+                    const isOutOfStock = product.stock === 0;
+
+                    return (
+                        <div className="col-md-4 mb-4" key={product.id}>
+                            <div className={`card cart ${isOutOfStock ? 'disabled-card' : ''}`}>
+                                <Link to={isOutOfStock ? "#" : `/product/${product.id}`} className={isOutOfStock ? "disabled-link" : ""}>
+                                    <img
+                                        src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}
+                                        className={`card-img-top ${isOutOfStock ? 'blurred' : ''}`}
+                                        alt={`image of  ${product.title}`}
+
+                                    />
+                                </Link>
                                 <div className="card-body">
                                     <h5 className="card-title">{product.title}</h5>
                                     <p className="card-text">{product.description}</p>
-                                    <p className="card-text "><strong>Price: ${product.price}</strong></p>
-
+                                    <p className="card-text"><strong>Price: ${product.price}</strong></p>
+                                    {isOutOfStock && <p className="text-danger">Out of Stock</p>}
                                 </div>
                             </div>
-                        </Link>
-
-                    </div>
-                ))}
+                        </div>
+                    );
+                })}
 
             </div>
+
             <div className="d-flex justify-content-center align-items-center mt-4 text-white dark:text-white/70">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
