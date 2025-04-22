@@ -60,7 +60,7 @@ const Navbar = () => {
                                 <Link className="dropdown-item" to="/MyOrders"><i class="bi bi-list-stars"></i> My Orders</Link>
                             ) : ('')}
                             
-                                <a className="dropdown-item" href="#">Another action</a>
+                                {/* <a className="dropdown-item" href="#">Another action</a> */}
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>
                             </div>

@@ -43,6 +43,7 @@ const VendorDashboard = () => {
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(null);
   const [products, setProducts] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const token = localStorage.getItem('token');
   
   const handleSubmit = asyncHandler(async (e) => {
@@ -119,17 +120,33 @@ const VendorDashboard = () => {
     fetchProducts();
   }, []);
 
+
+  const filteredProducts = Array.isArray(products)
+  ? products.filter((product) =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.price.toString().includes(searchTerm)
+    )
+  : [];
+
+
+
+
   return (
     <div className="container">
       <h1 className="my-4">Vendor Dashboard</h1>
 
       <Row className="align-items-center mb-3">
         <Col>
-          <Form.Control placeholder="Add your item here..." />
+          <Form.Control 
+                placeholder="Add your item here..." 
+                value={searchTerm}
+                onChange={(e)=>setSearchTerm(e.target.value)}  
+            />
         </Col>
-        <Col xs="auto">
+        {/* <Col xs="auto">
           <Button variant="secondary">Submit</Button>
-        </Col>
+        </Col> */}
       </Row>
 
       <Modal show={show} onHide={handleClose}>
@@ -280,7 +297,7 @@ const VendorDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product, index) => (
+                {filteredProducts.map((product, index) => (
                   <tr key={index}>
                     <td><img
                       src={`${import.meta.env.VITE_STORAGE_PATH}${product.image}`}

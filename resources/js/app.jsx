@@ -76,9 +76,10 @@ const App = () => {
             navigate('/admin');
         } else if (userRole === 'Vendor' && window.location.pathname !== '/vendor') {
             navigate('/vendor');
-        } else if (userRole === null && window.location.pathname !== '/login') {
-            navigate('/');
         }
+            //  else if (userRole === null && window.location.pathname !== '/login') {
+        //     navigate('/');
+        // }
     }, [userRole, navigate]);
     
     return (
