@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Events\RegistrationSuccessful;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,12 +23,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentails)) {
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
-           
+
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'user' => $user->name,
-                'role'=> $user->role->name,
+                'role' => $user->role->name,
             ]);
 
 
@@ -37,7 +39,7 @@ class AuthController extends Controller
     {
 
         $cartItems = $request->input('cartItems');
-       
+
 
     }
 
@@ -57,6 +59,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
@@ -66,19 +69,26 @@ class AuthController extends Controller
                 'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
             ],
-        ] , [
-           
+
+        ], [
+
             'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
 
-       $user=User::create($request->all());
-       
+        $role = Role::where('name', 'customer')->first();
+        //$user=User::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id' => $role->id,
+        ]);
         event(new RegistrationSuccessful($user));
 
         return response()->json([
