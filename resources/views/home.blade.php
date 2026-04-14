@@ -1,5 +1,8 @@
 @include('includes/header')
+<main class="flex-grow-1">
     @yield('content')
-    @include('includes/footer')
+</main>
+@include('includes/footer')
 </body>
+
 </html>
