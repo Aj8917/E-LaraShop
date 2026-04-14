@@ -293,3 +293,6 @@ html, body {
 .disabled-card {
   opacity: 0.8;
 }
+main {
+    flex: 1;
+}
