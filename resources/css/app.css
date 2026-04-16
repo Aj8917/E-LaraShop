@@ -117,12 +117,19 @@ html, body {
 .card-text {
   font-size: 0.9em;
   color: #fefbfb;
-}
+ }
 
 .card-text strong {
   color: #f1c40f;
 }
-
+.card-description {
+  font-size: 0.9em;
+  color: #fefbfb;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 /* Loader container */
 .loader-container {
   display: flex;

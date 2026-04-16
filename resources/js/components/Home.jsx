@@ -12,7 +12,7 @@ const Home = () => {
         axios.get(`/api/products?page=${page}`)
             .then(res => {
                 setProducts(res.data.data); // The actual products are inside the 'data' array
-               // setCurrentPage(res.data.current_page);
+                // setCurrentPage(res.data.current_page);
                 setLastPage(res.data.last_page);
             })
             .catch(error => {
@@ -52,7 +52,7 @@ const Home = () => {
                                 </Link>
                                 <div className="card-body">
                                     <h5 className="card-title">{product.title}</h5>
-                                    <p className="card-text">{product.description}</p>
+                                    <p className="card-description" >{product.description}</p>
                                     <p className="card-text"><strong>Price: ${product.price}</strong></p>
                                     {isOutOfStock && <p className="text-danger">Out of Stock</p>}
                                 </div>

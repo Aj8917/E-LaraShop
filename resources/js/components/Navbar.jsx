@@ -12,16 +12,16 @@ const Navbar = () => {
 
     //const user = JSON.parse(localStorage.getItem('user'));
     const user = useSelector((state) => state.auth?.userData?.user || JSON.parse(localStorage.getItem('user')));
-
+   
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
             dispatch(logout()); // Call the logout action
-            
-                navigate('/login'); 
-           
+
+            navigate('/login');
+
             localStorage.removeItem('user'); // Clear user data from localStorage
             localStorage.removeItem('order_id'); // Clear user data from localStorage
 
@@ -32,9 +32,9 @@ const Navbar = () => {
     };
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            {user?.role!=="Admin" ? (
-            <Link className="navbar-brand text-white dark:text-white/70" to="/">Home</Link>
-        ) : ('')}
+            {user?.role !== "Admin" ? (
+                <Link className="navbar-brand text-white dark:text-white/70" to="/">Home</Link>
+            ) : ('')}
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
             </button>
@@ -45,7 +45,7 @@ const Navbar = () => {
                         <Link className="nav-link" to="/">Home</Link>
                     </li>
                     */}
-   {/* <Link className="navbar-brand text-white dark:text-white/70" to="/paymentPage">paymentPage</Link> */}
+                    {/* <Link className="navbar-brand text-white dark:text-white/70" to="/paymentPage">paymentPage</Link> */}
                     {!user ? (
                         <Link className="navbar-brand text-white dark:text-white/70" to="/login">Login</Link>
                     ) : ('')}
@@ -56,10 +56,10 @@ const Navbar = () => {
                                 <b className="text-white dark:text-white/70">{user?.name}</b>
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {user?.role!=="Admin" && user?.role!=="Vendor" ? (
-                                <Link className="dropdown-item" to="/MyOrders"><i class="bi bi-list-stars"></i> My Orders</Link>
-                            ) : ('')}
-                            
+                                {user?.role !== "Admin" && user?.role !== "Vendor" ? (
+                                    <Link className="dropdown-item" to="/MyOrders"><i class="bi bi-list-stars"></i> My Orders</Link>
+                                ) : ('')}
+
                                 {/* <a className="dropdown-item" href="#">Another action</a> */}
                                 <div className="dropdown-divider"></div>
                                 <a className="dropdown-item" href="#" onClick={handleLogout}>Log out</a>
@@ -68,11 +68,16 @@ const Navbar = () => {
                     ) : ''}
 
                 </ul>
-                <Link
-                    className={`nav-link ${totalQuantity === 0 ? 'disabled' : ''}`}
-                    to="/cart" >
-                    <i className="bi bi-cart4"></i> <span className="badge badge-secondary">{totalQuantity}</span>
-                </Link>
+                {user?.role !== "Admin" && user?.role !== "Vendor" && (
+                    <Link
+                        className={`nav-link ${totalQuantity === 0 ? "disabled" : ""}`}
+                        to="/cart"
+                        onClick={(e) => totalQuantity === 0 && e.preventDefault()}
+                    >
+                        <i className="bi bi-cart4"></i>
+                        <span className="badge badge-secondary">{totalQuantity}</span>
+                    </Link>
+                )}
             </div>
         </nav >
     );
