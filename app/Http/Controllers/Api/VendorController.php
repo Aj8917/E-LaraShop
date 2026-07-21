@@ -249,6 +249,42 @@ class VendorController extends Controller
             ], 500);
         }
     }//destroy
+    public function stockUp(Request $request, string $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+        DB::beginTransaction();
+
+        try {
+            $decryptedId = decrypt($id);
+
+            // Find the product to update
+            $product = Products::findOrFail($decryptedId);
+
+            $inventory = Inventory::where('product_id', $product->id)
+                ->where('vendor_id', auth()->user()->id)
+                ->first();
+
+            if ($inventory) {
+                $inventory->increment('quantity', $request->quantity);
+            }
 
 
-}
+            DB::commit();
+
+            return response()->json(['message' => 'Stock updated successfully'], 200);
+        } catch (\Exception $e) {
+            // Roll back the transaction
+            DB::rollBack();
+
+            // Return an error response
+            return response()->json([
+                'error' => 'Failed to update inventory',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }//stockUp
+
+
+}//VendorController

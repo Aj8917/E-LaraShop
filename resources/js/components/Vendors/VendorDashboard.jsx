@@ -9,10 +9,11 @@ const VendorDashboard = () => {
 
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [showStockUp, setStockUp] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleClose = () => setShow(false);
-  
+
   const handleShow = () => {
     setShow(true);
     setTitle("");
@@ -25,7 +26,7 @@ const VendorDashboard = () => {
   const handleCloseEdit = () => {
     setShowEdit(false);
     setSelectedProduct(null);
-  }; 
+  };
 
   const handleShowEdit = (product) => {
     setSelectedProduct(product);
@@ -37,6 +38,20 @@ const VendorDashboard = () => {
     setShowEdit(true);
   };
 
+  const handleStockAdd = (product) => {
+    
+    setSelectedProduct(product);
+    setTitle(product.title);
+    setDescription(product.description);
+    setPrice(product.price);
+    setQuantity(product.quantity);
+    setImage(null); // Reset image for upload
+    setStockUp(true);
+  };
+  const handleCloseStockAdd = () => {
+    setStockUp(false);
+    setSelectedProduct(null);
+  };
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -45,7 +60,7 @@ const VendorDashboard = () => {
   const [products, setProducts] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const token = localStorage.getItem('token');
-  
+
   const handleSubmit = asyncHandler(async (e) => {
     e.preventDefault();
 
@@ -69,15 +84,14 @@ const VendorDashboard = () => {
 
   const handleEditSubmit = asyncHandler(async (e) => {
     e.preventDefault();
-    console.log(title);
     try {
       const response = await axios.put(
         `/api/vendor/${selectedProduct.id}`,
-        { title, description, price, quantity},
+        { title, description, price, quantity },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-           
+
           },
         }
       );
@@ -102,7 +116,28 @@ const VendorDashboard = () => {
       handleError(error);
     }
   });
-  
+  const handleAddStockSubmit = asyncHandler(async (e) => {
+    e.preventDefault();
+     
+     try {
+       const response = await axios.put(
+         `/api/vendors/${selectedProduct.id}/stock`,
+         {  quantity },
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+               },
+         }
+       );
+      
+       handleResponse(response, response.data.message);
+      fetchProducts();
+     } catch (error) {
+       handleError(error);
+     }
+    handleCloseStockAdd();
+  });
+
   const fetchProducts = async () => {
     try {
       const res = await axios.get('/api/vendor', {
@@ -122,12 +157,12 @@ const VendorDashboard = () => {
 
 
   const filteredProducts = Array.isArray(products)
-  ? products.filter((product) =>
+    ? products.filter((product) =>
       product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.price.toString().includes(searchTerm)
     )
-  : [];
+    : [];
 
 
 
@@ -138,11 +173,11 @@ const VendorDashboard = () => {
 
       <Row className="align-items-center mb-3">
         <Col>
-          <Form.Control 
-                placeholder="Add your item here..." 
-                value={searchTerm}
-                onChange={(e)=>setSearchTerm(e.target.value)}  
-            />
+          <Form.Control
+            placeholder="Add your item here..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </Col>
         {/* <Col xs="auto">
           <Button variant="secondary">Submit</Button>
@@ -266,7 +301,31 @@ const VendorDashboard = () => {
           </Form>
         </Modal.Body>
       </Modal>
+      {/* Add Stock Modal */}
+      <Modal show={showStockUp} onHide={handleCloseStockAdd}>
+        <Modal.Header closeButton>
+          <Modal.Title>Top Up {title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleAddStockSubmit}>
 
+            <Form.Group controlId="formQuantity">
+              <Form.Label>Quantity</Form.Label>
+              <Form.Control
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                placeholder="Update Quantity"
+                required
+              />
+            </Form.Group>
+
+            <Button variant="primary" type="submit" className="mt-3">
+              Add Stock
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
 
       <Row>
@@ -313,17 +372,22 @@ const VendorDashboard = () => {
                     <td>${product.price}</td>
                     <td>{product.created_at}</td>
                     <td>
-                    <i
+                      <i
                         className="bi bi-pencil-square"
                         onClick={() => handleShowEdit(product)}
                         style={{ cursor: 'pointer' }}
                       ></i>
 
+                    </td> 
+                    <td>
+                      <i class="bi bi-box-seam"
+                        onClick={() => handleStockAdd(product)}
+                        style={{ cursor: 'pointer' }}></i>
                     </td>
                     <td>
-                      <i class="bi bi-trash-fill" 
-                      onClick={() => handleDelete(product.id)}
-                      style={{ cursor: 'pointer' }}></i>
+                      <i class="bi bi-trash-fill"
+                        onClick={() => handleDelete(product.id)}
+                        style={{ cursor: 'pointer' }}></i>
                     </td>
                   </tr>
                 ))}
