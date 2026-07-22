@@ -7,6 +7,7 @@ use App\Http\Requests\VendorRequest;
 use App\Models\inventory;
 use App\Models\Products;
 
+use App\Models\StockTransaction;
 use Date;
 use DB;
 use Gate;
@@ -254,6 +255,7 @@ class VendorController extends Controller
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
+
         DB::beginTransaction();
 
         try {
@@ -261,12 +263,26 @@ class VendorController extends Controller
 
             // Find the product to update
             $product = Products::findOrFail($decryptedId);
-
+            Gate::authorize('update', $product);
             $inventory = Inventory::where('product_id', $product->id)
                 ->where('vendor_id', auth()->user()->id)
                 ->first();
 
             if ($inventory) {
+                $quantity = (int) $request->quantity;
+
+                $stockBefore = $inventory->quantity;
+                $stockAfter = $stockBefore + $quantity;
+
+              
+                StockTransaction::create([
+                    'product_id' => $product->id,
+                    'type' => 'top_up',
+                    'quantity' => $quantity,
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'created_by' => auth()->user()->id,
+                ]);
                 $inventory->increment('quantity', $request->quantity);
             }
 
