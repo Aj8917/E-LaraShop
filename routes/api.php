@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orderHistory',[OrderController::class , 'order_history']);
     Route::apiResource('/vendor',VendorController::class);
     Route::put('vendors/{vendor}/stock', [VendorController::class, 'stockUp']);
-
+    Route::get('vendors/{vendor}/history', [VendorController::class, 'stockHistory']);
 });
 
 

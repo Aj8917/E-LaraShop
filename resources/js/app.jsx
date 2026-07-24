@@ -19,6 +19,7 @@ import PaymentPage from './components/PaymentPage';
 import DeliveryDetails from './components/DeliveryDetails';
 import MyOrders from './components/MyOrders';
 import VendorDashboard from './components/Vendors/VendorDashboard';
+import StockHistory from './components/Admin/StockHistory';
 // Function to check user role
 
 
@@ -55,7 +56,9 @@ const AdminRoutes = () => (
     <Routes>
         {/* Admin-Only Routes */}
         <Route path="/" element={<AdminDashboard />} />
+        <Route path="history/:id" element={<StockHistory />} />
         <Route path="/admin/logout" element={<Login />} />
+        
     </Routes>
 );
 const VendorRoutes = () => (
@@ -69,18 +72,20 @@ const App = () => {
     const userData = useSelector((state) => state.auth.userData.user);
     const userRole = userData ? userData.role : null;
     const navigate = useNavigate();
-
+    const location = useLocation();
+    
     useEffect(() => {
        
-        if (userRole === 'Admin' && window.location.pathname !== '/admin') {
+        if (userRole === 'Admin' &&  !location.pathname.startsWith("/admin")) {
+            
             navigate('/admin');
-        } else if (userRole === 'Vendor' && window.location.pathname !== '/vendor') {
+        } else if (userRole === 'Vendor' && !location.pathname.startsWith("/vendor")) {
             navigate('/vendor');
         }
             //  else if (userRole === null && window.location.pathname !== '/login') {
         //     navigate('/');
         // }
-    }, [userRole, navigate]);
+    }, [userRole, location.pathname,navigate]);
     
     return (
         <>

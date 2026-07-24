@@ -274,7 +274,7 @@ class VendorController extends Controller
                 $stockBefore = $inventory->quantity;
                 $stockAfter = $stockBefore + $quantity;
 
-              
+
                 StockTransaction::create([
                     'product_id' => $product->id,
                     'type' => 'top_up',
@@ -302,5 +302,43 @@ class VendorController extends Controller
         }
     }//stockUp
 
+    public function stockHistory(string $id)
+    {
+        $history = StockTransaction::with([
+            'product',
+            'user'
+        ])
+            ->where('product_id', $id)
+            ->latest()
+            ->get();
 
+
+        if ($history->isEmpty()) {
+            return response()->json([
+                'message' => 'No record found'
+            ], 404);
+        }
+
+
+        $data = $history->map(function ($item) {
+
+            return [
+                'id' => $item->id,
+                'product_name' => $item->product->title ?? 'Unknown',
+                'type' => $item->type,
+                'quantity' => $item->quantity,
+                'stock_before' => $item->stock_before,
+                'stock_after' => $item->stock_after,
+                'created_by' => $item->user->name ?? '0',
+                'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+            ];
+
+        });
+
+
+        return response()->json([
+            'data' => $data
+        ], 200);
+
+    }//stockHistory
 }//VendorController

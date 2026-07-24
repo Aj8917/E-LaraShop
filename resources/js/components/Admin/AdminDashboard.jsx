@@ -7,6 +7,7 @@ import Pagination from 'react-bootstrap/Pagination';
 import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
 import { toast } from 'react-toastify';
 import NoEncryptionGmailerrorredIcon from '@mui/icons-material/NoEncryptionGmailerrorred';
+import { Link } from 'react-router-dom';
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +23,7 @@ const AdminDashboard = () => {
       })
       .catch(error => {
         console.error('Error while fetching', error);
+        toast.error('Error while fetching', error);
       });
   };
 
@@ -35,17 +37,17 @@ const AdminDashboard = () => {
     }
   };
 
-  const refuseProduct = async(productId) => {
+  const refuseProduct = async (productId) => {
     try {
       const response = await axios.patch(`/api/products/${productId}/refuse`, {}, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-  
+
       //  the API returns the updated `refuse` status for the product
       const updatedRefuse = response.data.flag_for_refuse;
-      
+
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.id === productId ? { ...product, refuse: updatedRefuse } : product
@@ -56,7 +58,8 @@ const AdminDashboard = () => {
       toast.error('Failed to update product');
     }
   };
-  
+
+
   return (
     <div className="table-container">
       <Table striped bordered hover className="table">
@@ -68,6 +71,7 @@ const AdminDashboard = () => {
             <th>Description</th>
             <th>Price</th>
             <th>Decline</th>
+            <th>Stock History</th>
           </tr>
         </thead>
         <tbody>
@@ -85,10 +89,18 @@ const AdminDashboard = () => {
               <td>{product.description}</td>
               <td>${product.price}</td>
               <td>
-              <button className='refuseButton' onClick={() => refuseProduct(product.id)} >
-              {product.refuse == '0' ?<EnhancedEncryptionIcon /> : <NoEncryptionGmailerrorredIcon /> } 
-              </button>
-                </td>
+                <button className='refuseButton' onClick={() => refuseProduct(product.id)} >
+                  {product.refuse == '0' ? <EnhancedEncryptionIcon /> : <NoEncryptionGmailerrorredIcon />}
+                </button>
+              </td>
+              <td>
+                <Link
+                  to={`../history/${product.id}`}
+                  className="btn btn-outline-secondary"
+                >
+                  <i className="bi bi-clock-history"></i>
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -116,7 +128,7 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
-  
+
 };
 
 export default AdminDashboard;
